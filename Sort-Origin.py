@@ -91,7 +91,7 @@ def summary_text():
 
 
 #  A function that gets the directory and then opens the origin file and prints the name of the folder
-def sort_albums(directory):
+def get_creators(directory):
     global count
     global good_missing
     global bad_missing
@@ -108,8 +108,7 @@ def sort_albums(directory):
         # open the yaml
         try:
             with open(origin_path, encoding="utf-8") as f:
-                data = yaml.load(f, Loader=yaml.FullLoader)
-                print("--Success!")
+                data = yaml.load(f, Loader=yaml.FullLoader)          
         except:
             print("--There was an issue parsing the yaml file and the cover could not be downloaded.")
             print("--Logged missing cover due to parse error. Redownload origin file.")
@@ -118,6 +117,18 @@ def sort_albums(directory):
             log_outcomes(directory, log_name, log_message)
             parse_error += 1  # variable will increment every loop iteration
             return
+              
+        # turn the data into variables
+        creators = {
+            "artist_name": data['Artist'],   
+            "album_name": data['Name'],
+            "dj_name": data['DJs'], 
+            "composer_name": data['Composers'],
+            "conductor_name": data['Conductors'] 
+        }
+        f.close()  
+        return creators
+        
     # otherwise log that the origin file is missing
     else:
         # split the director to make sure that it distinguishes between foldrs that should and shouldn't have origin files
@@ -158,7 +169,10 @@ def main():
         #  Run a loop that goes into each directory identified in the list and runs the function that sorts the folders
         for i in directories:
             os.chdir(i)  # Change working Directory
-            sort_albums(i)  # Run your function
+            #check for track and track number data
+            creators = get_creators(i)  # Run your function
+            print(creators)
+            #sort_albums(creators) # Filter out varios artist, dj and classical albums for additional checks
             total_count += 1  # variable will increment every loop iteration
 
     finally:
