@@ -33,11 +33,15 @@ good_missing = 0
 bad_missing = 0
 parse_error = 0
 error_message = 0
+origin_old = 0
 
 # identifies location origin files are supposed to be
 path_segments = album_directory.split(os.sep)
 segments = len(path_segments)
 origin_location = segments + album_depth
+
+# creates the list of albums that need to be moved post sorting
+move_list = []
 
 # A function to log events
 def log_outcomes(directory, log_name, message):
@@ -76,13 +80,16 @@ def summary_text():
     global bad_missing
     global parse_error
     global error_message
+    global origin_old
 
     print("")
-    print(f"This script reorganized {count} albums out of {total_count} examined.")
+    print(f"This script sorted {count} albums out of {total_count} folders examined.")
     print("This script looks for potential missing files or errors. The following messages outline whether any were found.")
 
     error_status = error_exists(parse_error)
     print(f"--{error_status}: There were {parse_error} albums skipped due to not being able to open the yaml. Redownload the yaml file.")
+    error_status = error_exists(origin_old)
+    print(f"--{error_status}: There were {origin_old} origin files that do not have the needed metadata and need to be updated.")
     error_status = error_exists(bad_missing)
     print(f"--{error_status}: There were {bad_missing} folders missing an origin files that should have had them.")
     error_status = error_exists(good_missing)
@@ -101,6 +108,7 @@ def get_creators(directory):
     global bad_missing
     global parse_error
     global origin_location
+    global origin_old
 
     print("\n")
     album_name = directory.split(os.sep)
@@ -124,18 +132,32 @@ def get_creators(directory):
             log_outcomes(directory, log_name, log_message)
             parse_error += 1  # variable will increment every loop iteration
             return
+        # check to see if the origin file has the corect metadata
+        if "Cover" in data.keys():
+            print("--You are using the correct version of gazelle-origin.")
               
-        # turn the data into variables
-        creators = {
-            "start_path": directory,
-            "album_directory": data['Directory'],
-            "artist_name": data['Artist'],   
-            "dj_name": data['DJs'], 
-            "composer_name": data['Composers'],
-            "conductor_name": data['Conductors'] 
-        }
-        f.close()  
-        return creators;
+            # turn the data into variables
+            creators = {
+                "start_path": directory,
+                "album_directory": data['Directory'],
+                "artist_name": data['Artist'],   
+                "dj_name": data['DJs'], 
+                "composer_name": data['Composers'],
+                "conductor_name": data['Conductors'] 
+            }
+            f.close()  
+            return creators;
+        else:
+            print("--You need to update your origin files with more metadata.")
+            print("--Switch to the gazelle-origin fork here: https://github.com/spinfast319/gazelle-origin")
+            print("--Then run: https://github.com/spinfast319/Update-Gazelle-Origin-Files")            
+            print("--Then try this script again.")
+            print("--Logged out of date origin file.")
+            print("--This cannot be moved.")
+            log_name = "out-of-date-origin"
+            log_message = "origin file out of date"
+            log_outcomes(directory, log_name, log_message)
+            origin_old += 1  # variable will increment every loop iteration       
         
     # otherwise log that the origin file is missing
     else:
@@ -163,15 +185,24 @@ def get_creators(directory):
             bad_missing += 1  # variable will increment every loop iteration
 
 # A function to move albums to the correct folder
-def move_albums(start_path,target):
+def move_albums(move_list):
     global count
+    
+    # Loop through the list of albums to move
+    for i in move_list:
 
-    print("Moving.")
-    print(f"--Source: {start_path}")
-    print(f"--Destination: {target}")
-    shutil.move(start_path, target)
-    print("Move completed.")
-    count += 1  # variable will increment every loop iteration
+        # Break each entry into a source and target
+        start_path = i[0]
+        target = i[1]
+
+        # Move them to the folders they belong in
+        print("")
+        print("Moving.")
+        print(f"--Source: {start_path}")
+        print(f"--Destination: {target}")
+        shutil.move(start_path, target)
+        print("Move completed.")
+        count += 1  # variable will increment every loop iteration
             
 
 # A function to sort albums based on their creators and request them to be moved
@@ -180,6 +211,7 @@ def sort_albums(creators):
     global va_directory
     global dj_directory
     global log_directory
+    global move_list
     
     if creators != None:
         start_path = creators['start_path']
@@ -187,21 +219,18 @@ def sort_albums(creators):
             if creators['dj_name'] != None:
                 print("--This should be moved to the DJ folder.")
                 target = os.path.join(dj_directory, creators['album_directory'])
-                # Change directory so the album directory can be moved and move them
-                os.chdir(log_directory)
-                move_albums(start_path,target)
+                move_pair = (start_path, target)
+                move_list.append(move_pair)   
             elif creators['composer_name'] != None or creators['composer_name'] != None:
                 print("--This should be moved to the Classical folder.")
                 target = os.path.join(classical_directory, creators['album_directory'])
-                # Change directory so the album directory can be moved and move them
-                os.chdir(log_directory)
-                move_albums(start_path,target)                  
+                move_pair = (start_path, target)
+                move_list.append(move_pair)                   
             elif creators['artist_name'] == "Various Artists":
                 print("--This should be moved to the Various Artists folder.")
                 target = os.path.join(va_directory, creators['album_directory'])
-                # Change directory so the album directory can be moved and move them
-                os.chdir(log_directory)
-                move_albums(start_path,target)                
+                move_pair = (start_path, target)
+                move_list.append(move_pair)   
             else:
                 print("--This should not be moved.")
 
@@ -209,11 +238,14 @@ def sort_albums(creators):
 # The main function that controls the flow of the script
 def main():
     global total_count
+    global move_list
     
     try:
         # intro text
         print("")
         print("Do or do not...")
+        print("")
+        print("Part 1: Sorting")
 
         # Get all the subdirectories of album_directory recursively and store them in a list:
         directories = [os.path.abspath(x[0]) for x in os.walk(album_directory)]
@@ -226,6 +258,15 @@ def main():
             creators = get_creators(i)  # Run your function
             sort_albums(creators) # Filter out various artist, dj and classical albums for additional checks
             total_count += 1  # variable will increment every loop iteration
+            
+        # Change directory so the album directory can be moved and move them
+        os.chdir(log_directory)
+        
+        # Move the albums to the folders the need to be sorted into
+        print("")
+        print("Part 2: Moving")    
+        move_albums(move_list)      
+
 
     finally:
         # Summary text
