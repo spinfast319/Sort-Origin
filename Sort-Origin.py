@@ -1,11 +1,9 @@
 # Sort Albums with Origin Files
-# author: hypermodifiede
+# author: hypermodified
 # This python script is meant to use yaml origin files to sort different types of albums into different directories so they can be tagged and renamed later
-# Specifivally, it identifies and moves albums that have DJ/compiliers instead of artists, classical albums, and Various Artist albums.
+# Specifically, it identifies and moves albums that have DJ/compiliers instead of artists, classical albums, and Various Artist albums.
 # It moves each of those to a folder of similar types.
 # It can handle strange characters and nested folders. It has been tested and works in both Ubuntu Linux and Windows 10.
-
-# Before running this script install the dependencies
 
 # Import dependencies
 import os  # Imports functionality that let's you interact with your operating system
