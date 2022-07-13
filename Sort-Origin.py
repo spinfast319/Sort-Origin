@@ -272,8 +272,7 @@ def main():
         #  Run a loop that goes into each directory identified in the list and runs the function that sorts the folders
         for i in directories:
             os.chdir(i)  # Change working Directory
-            # check for track and track number data
-            creators = get_creators(i)  # Run your function
+            creators = get_creators(i)  # Run function to get origin data
             sort_albums(creators)  # Filter out various artist, dj and classical albums for additional checks
             total_count += 1  # variable will increment every loop iteration
 
