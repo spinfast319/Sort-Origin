@@ -4,6 +4,14 @@ Specifically, it identifies and moves albums that have DJ/compiliers instead of 
 
 It has been tested and works in both Ubuntu Linux and Windows 10.
 
+## Dependencies
+
+This project has a dependency on the gazelle-origin project created by x1ppy. gazelle-origin scrapes gazelle based sites and stores the related music metadata in a yaml file in the music albums folder. It is located here: https://github.com/x1ppy/gazelle-origin
+
+For this script to work you need origin files with additional metadata. The fork that has the most additional metadata right now is: https://github.com/spinfast319/gazelle-origin
+
+All of the albums you want to check will need to have updated origin files created already.
+
 ## Install and set up
 Clone this script where you want to run it.
 
