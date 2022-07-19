@@ -223,29 +223,41 @@ def sort_albums(creators):
     global dj_directory
     global log_directory
     global move_list
+    global album_depth
 
     # creates filters for dj albums, classical albums and various artists with different paths for each
     if creators != None:
         start_path = creators["start_path"]
         if start_path != None:
+
+            # get album name or artist-album name and create target path
+            path_parths = start_path.split(os.sep)
+            if album_depth == 1:
+                album_name = path_parths[-1]
+            elif album_depth == 2:
+                aritist_name = path_parths[-2]
+                album_name = path_parths[-1]
+                album_name = os.path.join(aritist_name, album_name)
+
+            # Sort the albums
             if creators["dj_name"] != None:
                 print("--This should be moved to the DJ folder.")
-                target = os.path.join(dj_directory, creators["album_directory"])
-                # makse the pair a tupple
+                target = os.path.join(dj_directory, album_name)
+                # make the pair a tupple
                 move_pair = (start_path, target)
                 # adds the tupple to the list
                 move_list.append(move_pair)
             elif creators["composer_name"] != None or creators["composer_name"] != None:
                 print("--This should be moved to the Classical folder.")
-                target = os.path.join(classical_directory, creators["album_directory"])
-                # makse the pair a tupple
+                target = os.path.join(classical_directory, album_name)
+                # make the pair a tupple
                 move_pair = (start_path, target)
                 # adds the tupple to the list
                 move_list.append(move_pair)
             elif creators["artist_name"] == "Various Artists":
                 print("--This should be moved to the Various Artists folder.")
-                target = os.path.join(va_directory, creators["album_directory"])
-                # makse the pair a tupple
+                target = os.path.join(va_directory, album_name)
+                # make the pair a tupple
                 move_pair = (start_path, target)
                 # adds the tupple to the list
                 move_list.append(move_pair)
