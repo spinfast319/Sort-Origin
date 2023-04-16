@@ -14,9 +14,9 @@ import datetime  # Imports functionality that lets you make timestamps
 #  Set your directories here
 album_directory = "M:\Python Test Environment\Albums"  # Which directory do you want to start with?
 log_directory = "M:\Python Test Environment\Logs"  # Which directory do you want the log in?
-va_directory = "M:\Python Test Environment\Sorted\Various Artists"  # Directory to move Various Artist albums to
-dj_directory = "M:\Python Test Environment\Sorted\DJ"  # Directory to move DJ mix albums to
-classical_directory = "M:\Python Test Environment\Sorted\Classical"  # Directory to move classical albums to
+va_directory = "M:\PROCESS-SORT\Various Artists"  # Directory to move Various Artist albums to
+dj_directory = "M:\PROCESS-SORT\DJ"  # Directory to move DJ mix albums to
+classical_directory = "M:\PROCESS-SORT\Classical"  # Directory to move classical albums to
 
 
 # Set whether you are using nested folders or have all albums in one directory here
