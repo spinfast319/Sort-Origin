@@ -4,13 +4,12 @@ Specifically, it identifies and moves albums that have DJ/compiliers instead of 
 
 It has been tested and works in both Ubuntu Linux and Windows 10.
 
+This script is meant to work in conjunction with other scripts in order to manage a large music library when the source of the music has good metadata you want to use to organize it.  You can find an overview of the scripts and workflow at [Origin-Music-Management](https://github.com/spinfast319/Origin-Music-Management). 
+
 ## Dependencies
+This project has a dependency on the gazelle-origin project created by x1ppy. gazelle-origin scrapes gazelle based sites and stores the related music metadata in a yaml file in the music albums folder. For this script to work you need to use a fork that has additional metadata including the tags and coverart. The fork that has the most additional metadata right now is: https://github.com/spinfast319/gazelle-origin
 
-This project has a dependency on the gazelle-origin project created by x1ppy. gazelle-origin scrapes gazelle based sites and stores the related music metadata in a yaml file in the music albums folder. It is located here: https://github.com/x1ppy/gazelle-origin
-
-For this script to work you need origin files with additional metadata. The fork that has the most additional metadata right now is: https://github.com/spinfast319/gazelle-origin
-
-All of the albums you want to check will need to have updated origin files created already.
+All your albums will need origin files origin files associated with them already for this script to work.
 
 ## Install and set up
 Clone this script where you want to run it.
@@ -27,4 +26,14 @@ Set up or specify the five directories you will be using and specify whether you
 
 The default is 1 (Music/Album)
 
-Then run the script from the command line.  It moves albums of those three types to the directories and leaves the rest in the albums directory.
+Use your terminal to navigate to the directory the script is in and run the script from the command line.  When it finishes it will output how many albums it moved.
+
+```
+Sort-Origin.py
+```
+
+_note: on linux and mac you will likely need to type "python3 Sort-Origin.py"_  
+_note 2: you can run the script from anywhere if you provide the full path to it_
+
+
+When it finishing running the script moves albums of those three types to the directories and leaves the rest in the albums directory. The script will also create logs listing any album that it has problems processing.  
