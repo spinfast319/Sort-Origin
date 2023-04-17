@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Sort Albums with Origin Files
 # author: hypermodified
 # This python script is meant to use yaml origin files to sort different types of albums into different directories so they can be tagged and renamed later
