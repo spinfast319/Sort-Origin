@@ -1,8 +1,10 @@
 # Sort-Origin
 ### This is a python script that uses yaml origin files to sort different types of albums into different directories so they can be tagged and renamed later.
-Specifically, it identifies and moves albums that have DJ/compiliers instead of artists, classical albums, and Various Artist albums. It moves each of those to a folder of similar types. If you were to tag and rename these you would likely need to handle the way the _artist_ is defined and for some you might want _track number - track name_  and others _track number - artist - track name_. It can handle strange characters and nested folders and it logs any errors it runs into.
+Specifically, it identifies and moves albums that have DJ/compiliers instead of artists, classical albums, and Various Artist albums. It moves each of those to a folder of similar types. It leaves the rest of the albums in the directly it is scanning.
 
-It has been tested and works in both Ubuntu Linux and Windows 10.
+It does this so you can automate tagging and renaming of alumbs. If you were to tag and rename the albums it moves you would likely need to handle the way the _artist_ is defined and for some you might want _track number - track name_  and others _track number - artist - track name_. By separating the albums into different folders you can set up different templates and then automate the tagging and renaming of all the albums of a similar type.
+
+It can handle strange characters and nested folders and it logs any errors it runs into. It has been tested and works in both Ubuntu Linux and Windows 10.
 
 This script is meant to work in conjunction with other scripts in order to manage a large music library when the source of the music has good metadata you want to use to organize it.  You can find an overview of the scripts and workflow at [Origin-Music-Management](https://github.com/spinfast319/Origin-Music-Management). 
 
