@@ -13,6 +13,8 @@ import yaml  # Imports yaml
 import shutil  # Imports functionality that lets you copy files and directory
 import datetime  # Imports functionality that lets you make timestamps
 
+import origin_script_library as osl  # Imports common code used across all origin scripts
+
 #  Set your directories here
 album_directory = "M:\PROCESS"  # Which directory do you want to start with?
 log_directory = "M:\PROCESS-LOGS\Logs"  # Which directory do you want the log in?
@@ -279,9 +281,8 @@ def main():
         print("")
         print("Part 1: Sorting")
 
-        # Get all the subdirectories of album_directory recursively and store them in a list:
-        directories = [os.path.abspath(x[0]) for x in os.walk(album_directory)]
-        directories.remove(os.path.abspath(album_directory))  # If you don't want your main directory included
+        # Get all the subdirectories of album_directory recursively and store them in a list
+        directories = osl.set_directory(album_directory)
 
         #  Run a loop that goes into each directory identified in the list and runs the function that sorts the folders
         for i in directories:
